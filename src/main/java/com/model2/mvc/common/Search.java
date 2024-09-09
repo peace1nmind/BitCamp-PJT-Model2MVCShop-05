@@ -15,6 +15,10 @@ public class Search {
 	//==> 참조
 	private int endRowNum;
 	private int startRowNum;
+	/* 개인추가항목 */
+	private String orderBy;		// ORDER BY 항목
+	private boolean desc;		// DESC 여부(ture: DESC, false: ASC)
+	
 	
 	///Constructor
 	public Search() {
@@ -56,6 +60,22 @@ public class Search {
 	//==> Select Query 시 ROWNUM 시작 값
 	public int getStartRowNum() {
 		return (getCurrentPage()-1)*getPageSize()+1;
+	}
+	
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	public boolean isDesc() {
+		return desc;
+	}
+
+	public void setDesc(boolean desc) {
+		this.desc = desc;
 	}
 
 	@Override
