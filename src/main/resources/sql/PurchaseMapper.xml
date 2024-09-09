@@ -9,23 +9,23 @@
 	<!-- DB Column과 VO의 Field 맵핑 -->
 	<!-- TypeHandler가 필요하다 -->
 	<resultMap type="purchase" id="purchaseSelectMap">
-		<result property="tranNo" 			column="tran_no" 			jdbcType="INTEGER"/>
-		<result property="purchaseProd" 	column="prod_no" 			jdbcType="INTEGER"		javaType="com.model2.mvc.service.domain.Product"/>
-		<result property="buyer" 			column="buyer_id" 			jdbcType="VARCHAR"		javaType="com.model2.mvc.service.domain.User"/>	
-		<result property="paymentOption" 	column="payment_option" 	jdbcType="CHAR"/>
-		<result property="receiverName" 	column="receiver_name" 		jdbcType="VARCHAR"/>
-		<result property="receiverPhone" 	column="receiver_phone" 	jdbcType="VARCHAR"/>
-		<result property="dlvyAddr" 		column="dlvy_addr" 			jdbcType="VARCHAR"/>
-		<result property="dlvyRequest" 		column="dlvy_request" 		jdbcType="VARCHAR"/>
-		<result property="tranCode" 		column="tran_status_code" 	jdbcType="CHAR"/>
-		<result property="orderDate" 		column="order_date" 		jdbcType="DATE"/>
-		<result property="dlvyDate" 		column="dlvy_date" 			jdbcType="DATE"/>
+		<result property="tranNo" 				column="tran_no" 			jdbcType="INTEGER"/>
+		<result property="purchaseProd.prodNo" 	column="prod_no" 			jdbcType="INTEGER"/>
+		<result property="buyer.userId" 		column="buyer_id" 			jdbcType="VARCHAR"/>	
+		<result property="paymentOption" 		column="payment_option" 	jdbcType="CHAR"/>
+		<result property="receiverName" 		column="receiver_name" 		jdbcType="VARCHAR"/>
+		<result property="receiverPhone" 		column="receiver_phone" 	jdbcType="VARCHAR"/>
+		<result property="dlvyAddr" 			column="dlvy_addr" 			jdbcType="VARCHAR"/>
+		<result property="dlvyRequest" 			column="dlvy_request" 		jdbcType="VARCHAR"/>
+		<result property="tranCode" 			column="tran_status_code" 	jdbcType="CHAR"/>
+		<result property="orderDate" 			column="order_date" 		jdbcType="DATE"/>
+		<result property="dlvyDate" 			column="dlvy_date" 			jdbcType="DATE"/>
 	</resultMap>
 	
 	
 	<!-- selectPurchase: 구매정보 조회 -->
 	<select id="selectPurchase"
-			parameterType="int"
+			parameterType="java.lang.Integer"
 			resultMap="purchaseSelectMap">
 	
 		SELECT
@@ -43,7 +43,6 @@
 	
 	<!-- selectPurchaseByProd: prodNo로 구매정보 조회 -->
 	<select id="selectPurchaseByProd"
-			parameterMap="int"
 			resultMap="purchaseSelectMap">
 	
 		SELECT
@@ -65,22 +64,17 @@
 	
 		INSERT INTO transaction
 		VALUES (seq_transaction_tran_no.NEXTVAL,
-				${purchase.purchaseProd.prodNo:INTEGER},
-				${purchase.buyer.userId},
-				<if test="paymentOption == null">null</if>
-				<if test="paymnetOption != null">#{paymentOption}</if>,
-				<if test="receiverName == null">null</if>
-				<if test="receiverName != null">#{receiverName}</if>,
-				<if test="receiverPhone == null">null</if>
-				<if test="receiverPhone != null">#{receiverPhone}</if>,
-				<if test="dlvyAddr == null">null</if>
-				<if test="dlvyAddr != null">#{dlvyAddr}</if>
-				<if test="dlvyRequest == null">null</if>
-				<if test="dlvyRequest != null">#{dlvyRequest}</if>,
-				tran_status_code = '2',
-				SYSDATE,
-				<if test="dlvyDate == null">null</if>
-				<if test="dlvyDate != null">#{dlvyDate}</if>)
+			    #{purchaseProd.prodNo, jdbcType=INTEGER},
+			    #{buyer.userId, jdbcType=VARCHAR},
+			    #{paymentOption, jdbcType=VARCHAR},
+			    #{receiverName, jdbcType=VARCHAR},
+			    #{receiverPhone, jdbcType=VARCHAR},
+			    #{dlvyAddr, jdbcType=VARCHAR},
+			    #{dlvyRequest, jdbcType=VARCHAR},
+			    '2',
+			    SYSDATE,
+			    TO_DATE(#{dlvyDate, jdbcType=DATE}, 'YYMMDD')
+			   )
 		
 			
 	</insert>
@@ -89,26 +83,27 @@
 	<!-- selectPurchaseList: 구매이력 조회 (구매완료~배송중) -->
 	<!-- RowBouns 사용해보기 RowBounds(offset, limit) -->
 	<select id="selectPurchaseList"
+			parameterType="map"
 			resultMap="purchaseSelectMap">
 	
 		SELECT * 
 		FROM(	SELECT inner_table.*, ROWNUM AS row_seq		
 				FROM(	SELECT * 
 						FROM transaction
-						WHERE buyer_id = ${map.buyerId}
+						WHERE buyer_id = #{buyerId}
 						AND tran_status_code BETWEEN 2 AND 3
 						ORDER BY order_date DESC
 					) inner_talbe
-				WHERE ROWNUM &lt;= ${map.search.endRowNum}
+				WHERE ROWNUM &lt;= #{search.endRowNum}
 			)
-		WHERE row_seq BETWEEN ${map.search.startRowNum} AND ${map.search.endRowNum}
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 				
 	</select>
 	
 	
 	<!-- countPurchaseList -->
 	<select id="countPurchaseList"
-			resultType="int">
+			resultType="java.lang.Integer">
 	
 		SELECT COUNT(*)
 		FROM (SELECT * 
@@ -122,31 +117,32 @@
 	
 	<!-- selectPurchaseHistoryList: 구매이력 조회 (배송완료~) -->
 	<select id="selectPurchaseHistoryList"
+			parameterType="map"
 			resultMap="purchaseSelectMap">
 	
 		SELECT * 
 		FROM(	SELECT inner_table.*, ROWNUM AS row_seq		
 				FROM(	SELECT * 
 						FROM transaction
-						WHERE buyer_id = ${map.buyerId}
+						WHERE buyer_id = #{buyerId}
 						AND tran_status_code &gt;= 4
 						ORDER BY order_date DESC
 					) inner_talbe
-				WHERE ROWNUM &lt;= ${map.search.endRowNum}
+				WHERE ROWNUM &lt;= #{search.endRowNum}
 			)
-		WHERE row_seq BETWEEN ${map.search.startRowNum} AND ${map.search.endRowNum}
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 				
 	</select>
 	
 	
 	<!-- countPurchaseHistoryList -->
 	<select id="countPurchaseHistoryList"
-			resultType="int">
+			resultType="java.lang.Integer">
 	
 		SELECT COUNT(*)
 		FROM (	SELECT * 
 				FROM transaction
-				WHERE buyer_id = ${map.buyerId}
+				WHERE buyer_id = #{buyerId}
 				AND tran_status_code &gt;= 4
 			 )
 			
@@ -169,7 +165,7 @@
 	
 	<!-- countSaleList -->
 	<select id="countSaleList"
-			resultType="int">
+			resultType="java.lang.Integer">
 		
 		SELECT COUNT(*)
 		FROM (	SELECT * 
@@ -187,23 +183,12 @@
 		UPDATE transaction
 		
 		<set>
-			payment_option = <if test="paymentOption == null">null</if>
-							 <if test="paymentOption != null">#{paymentOption}</if>,
-			
-			receiver_name = <if test="receiverName == null">null</if>
-							<if test="receiverName != null">#{receiverName}</if>,
-			
-			receiver_phone = <if test="receiverPhone == null">null</if>
-							 <if test="receiverPhone != null">#{receiverPhon}</if>,
-			
-			dlvy_addr = <if test="dlvyAddr == null">null</if>
-						<if test="dlvyAddr != null">#{dlvyAddr}</if>,
-			
-			dlvy_request = <if test="dlvyRequest == null">null</if>
-						   <if test="dlvyRequest != null">#{dlvyRequest}</if>,
-			
-			dlvy_date = <if test="dlvyDate == null">null</if>
-						<if test="dlvyDate != null">#{dlvyDate:Date}</if>,
+			payment_option = #{paymentOption},
+			receiver_name = #{receiverName},
+			receiver_phone = #{receiverPhon},
+			dlvy_addr = #{dlvyAddr},
+			dlvy_request = #{dlvyRequest},
+			dlvy_date = TO_DATE(#{dlvyDate:Date}, 'YYMMDD'),
 		</set>
 		
 		WHERE tran_no = #{tranNo}

@@ -6,12 +6,17 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 
 import com.model2.mvc.service.TranCodeMapper;
 import com.model2.mvc.service.product.ProductDao;
-import com.model2.mvc.service.product.ProductService;
 import com.model2.mvc.service.user.UserDao;
 
+//@ContextConfiguration	(locations = {	"classpath:config/context-common.xml",
+//		"classpath:config/context-aspect.xml",
+//		"classpath:config/context-mybatis.xml",
+//		"classpath:config/context-transaction.xml"
+//		})
 public class Purchase {
 
 	// Field
@@ -30,24 +35,41 @@ public class Purchase {
 	private String dlvyDate;		// DLVY_DATE			배송 희망 일자
 	//														(배송이 완료되면 배송된 날짜로 변경하기)
 	
-	/* 04 리펙토링 추가항목 */
-	@Autowired
-	@Qualifier("productDaoImpl")
-	private ProductDao productDao;
-//	private int purchaseProdNo;
-	
-	@Autowired
-	@Qualifier("UserDaoImpl")
-	private UserDao userDao;
+//	@Autowired
+//	@Qualifier("productDaoImpl")
+//	private ProductDao productDao;
+//	private int prodNo;
+//	
+//	@Autowired
+//	@Qualifier("userDaoImpl")
+//	private UserDao userDao;
 //	private String buyerId;
-	
-	public void setProductDao(ProductDao productDao) {
-		this.productDao = productDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
+//
+//	public int getProdNo() {
+//		return prodNo;
+//	}
+//
+//	public void setProdNo(int prodNo) {
+//		this.prodNo = prodNo;
+//		System.out.println(productDao==null);
+//	}
+//
+//	public String getBuyerId() {
+//		return buyerId;
+//	}
+//
+//	public void setBuyerId(String buyerId) {
+//		this.buyerId = buyerId;
+//		System.out.println(userDao==null);
+//	}
+//
+//	public void setProductDao(ProductDao productDao) {
+//		this.productDao = productDao;
+//	}
+//
+//	public void setUserDao(UserDao userDao) {
+//		this.userDao = userDao;
+//	}
 
 	// Constructor
 	public Purchase() {
@@ -78,17 +100,6 @@ public class Purchase {
 	public void setPurchaseProd(Product purchaseProd) {
 		this.purchaseProd = purchaseProd;
 	}
-	
-//	public void setPurchaseProd(int prodNo) {
-//		
-//		try {
-//			this.purchaseProd = productDao.selectProduct(prodNo);
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			
-//		}
-//	}
 
 	public User getBuyer() {
 		return buyer;
@@ -97,17 +108,6 @@ public class Purchase {
 	public void setBuyer(User buyer) {
 		this.buyer = buyer;
 	}
-	
-//	public void setBuyer(String buyerId) {
-//		
-//		try {
-//			this.buyer = userDao.getUser(buyerId);
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			
-//		}
-//	}
 
 	public String getPaymentOption() {
 		return paymentOption;
@@ -188,13 +188,13 @@ public class Purchase {
 	}
 
 	public void setDlvyDate(String dlvyDate) {
-		this.dlvyDate = (dlvyDate==null)? "SYSDATE" : dlvyDate.replace("-", "").replace("/", "");
+		this.dlvyDate = (dlvyDate==null)? "SYSDATE" : dlvyDate.split(" ")[0];
 	}
 
 	@Override
 	public String toString() {
 
-		return String.format("PurchaseVO : [tranNo] %d "
+		return String.format("Purchase : [tranNo] %d "
 				+ "\n\t[puchaseProd] %s "
 				+ "\n\t[buyer] %s "
 				+ "\n\t[paymentOption] %s "
