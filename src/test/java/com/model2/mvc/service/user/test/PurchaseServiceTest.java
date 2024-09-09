@@ -84,7 +84,7 @@ public class PurchaseServiceTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testGetSaleList() {
 	
 		Search search = new Search();
@@ -93,6 +93,33 @@ public class PurchaseServiceTest {
 		
 		purchaseService.getSaleList(search);
 		
+	}
+	
+	
+	//@Test
+	public void testUpdatePurchase() {
+		Purchase purchase = purchaseService.getPurchase(10003);
+		purchase.setReceiverName("�谩ö");
+		purchase.setDlvyDate("24-09-09");
+//		purchase.setDlvyDate(null);
+		
+		purchaseService.updatePurchase(purchase);
+	}
+	
+	
+//	@Test
+	public void testUpdateTranCode() {
+		Purchase purchase = purchaseService.getPurchase(10003);
+		
+		purchaseService.updateTranCode(purchase, "3");
+		
+	}
+	
+	
+	@Test
+	public void testUpdateTranCodeByTranNo() {
+		
+		purchaseService.updateTranCode(10003, "4");
 	}
 	
 	

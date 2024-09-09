@@ -183,12 +183,12 @@
 		UPDATE transaction
 		
 		<set>
-			payment_option = #{paymentOption},
-			receiver_name = #{receiverName},
-			receiver_phone = #{receiverPhon},
-			dlvy_addr = #{dlvyAddr},
-			dlvy_request = #{dlvyRequest},
-			dlvy_date = TO_DATE(#{dlvyDate:Date}, 'YYMMDD'),
+			payment_option = #{paymentOption:CHAR},
+			receiver_name = #{receiverName:VARCHAR},
+			receiver_phone = #{receiverPhone:VARCHAR},
+			dlvy_addr = #{dlvyAddr:VARCHAR},
+			dlvy_request = #{dlvyRequest:VARCHAR},
+			dlvy_date = #{dlvyDate:DATE}
 		</set>
 		
 		WHERE tran_no = #{tranNo}
@@ -201,8 +201,8 @@
 			parameterType="purchase">
 		
 		UPDATE transaction
-		SET tran_status_code = #{tranCode}
-		WHERE tran_no = #{tranNo}
+		SET tran_status_code = #{tranCode:CHAR}
+		WHERE tran_no = #{tranNo:INTEGER}
 				
 	</update>
 	

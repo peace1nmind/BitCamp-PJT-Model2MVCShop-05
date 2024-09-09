@@ -188,7 +188,7 @@ public class Purchase {
 	}
 
 	public void setDlvyDate(String dlvyDate) {
-		this.dlvyDate = (dlvyDate==null)? "SYSDATE" : dlvyDate.split(" ")[0];
+		this.dlvyDate = (dlvyDate==null)? dlvyDate : dlvyDate.split(" ")[0];
 	}
 
 	@Override

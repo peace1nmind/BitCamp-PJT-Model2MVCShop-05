@@ -102,7 +102,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	@Override
 	public void updateTranStatusCode(Purchase purchase) throws Exception {
 		
-		sqlSession.update("PurchaseMapper.updatePurchase", purchase);
+		sqlSession.update("PurchaseMapper.updateTranStatusCode", purchase);
 	}
 
 }
