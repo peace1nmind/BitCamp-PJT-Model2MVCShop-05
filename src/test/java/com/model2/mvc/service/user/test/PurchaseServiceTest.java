@@ -53,7 +53,7 @@ public class PurchaseServiceTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testGetPurchase() {
 		
 		System.out.println("\n==============================");
@@ -116,7 +116,7 @@ public class PurchaseServiceTest {
 	}
 	
 	
-	@Test
+//	@Test
 	public void testUpdateTranCodeByTranNo() {
 		
 		purchaseService.updateTranCode(10003, "4");

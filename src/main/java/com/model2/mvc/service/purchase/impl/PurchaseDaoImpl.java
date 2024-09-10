@@ -33,8 +33,11 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
 	@Override
 	public Purchase selectPurchase(int tranNo) throws Exception {
-
-		return sqlSession.selectOne("PurchaseMapper.selectPurchase", tranNo);
+		Purchase purchase = sqlSession.selectOne("PurchaseMapper.selectPurchase", tranNo);
+		purchase.setPurchaseProd(sqlSession.selectOne("ProductMapper.selectProduct", purchase.getPurchaseProd().getProdNo()));
+		purchase.setBuyer(sqlSession.selectOne("UserMapper.getUser", purchase.getBuyer().getUserId()));
+		
+		return purchase;
 	}
 
 	@Override
@@ -56,7 +59,16 @@ public class PurchaseDaoImpl implements PurchaseDao {
 		map.put("search", search);
 		map.put("buyerId", buyerId);
 		
-		return sqlSession.selectList("PurchaseMapper.selectPurchaseList", map);
+		List<Purchase> list = sqlSession.selectList("PurchaseMapper.selectPurchaseList", map);
+		
+		for (Purchase purchase : list) {
+			purchase.setPurchaseProd(sqlSession.selectOne("ProductMapper.selectProduct", purchase.getPurchaseProd().getProdNo()));
+			purchase.setBuyer(sqlSession.selectOne("UserMapper.getUser", purchase.getBuyer().getUserId()));
+			
+			list.set(list.indexOf(purchase), purchase);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -72,7 +84,16 @@ public class PurchaseDaoImpl implements PurchaseDao {
 		map.put("search", search);
 		map.put("buyerId", buyerId);
 		
-		return sqlSession.selectList("PurchaseMapper.selectPurchaseHistoryList", map);
+		List<Purchase> list = sqlSession.selectList("PurchaseMapper.selectPurchaseHistoryList", map);
+		
+		for (Purchase purchase : list) {
+			purchase.setPurchaseProd(sqlSession.selectOne("ProductMapper.selectProduct", purchase.getPurchaseProd().getProdNo()));
+			purchase.setBuyer(sqlSession.selectOne("UserMapper.getUser", purchase.getBuyer().getUserId()));
+			
+			list.set(list.indexOf(purchase), purchase);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -83,8 +104,17 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
 	@Override
 	public List<Purchase> selectSaleList(Search search) throws Exception {
-
-		return sqlSession.selectList("PurchaseMapper.selectSaleList", null, new RowBounds(search.getStartRowNum(), search.getEndRowNum()));
+		
+		List<Purchase> list = sqlSession.selectList("PurchaseMapper.selectSaleList", null, new RowBounds(search.getStartRowNum(), search.getEndRowNum()));
+		
+		for (Purchase purchase : list) {
+			purchase.setPurchaseProd(sqlSession.selectOne("ProductMapper.selectProduct", purchase.getPurchaseProd().getProdNo()));
+			purchase.setBuyer(sqlSession.selectOne("UserMapper.getUser", purchase.getBuyer().getUserId()));
+			
+			list.set(list.indexOf(purchase), purchase);
+		}
+		
+		return list;
 	}
 
 	@Override
