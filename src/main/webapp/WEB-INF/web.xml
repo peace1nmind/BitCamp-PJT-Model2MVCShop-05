@@ -7,6 +7,18 @@
 
 	<display-name>05.Model2MVCShop(AOP,Transaction)</display-name>
 	
+	<!-- 게시판 Page 하단 Page 번호 개수 예)  이전 1 2 3 4 5  이후 -->
+	<context-param>
+		<param-name>pageUnit</param-name>
+		<param-value>5</param-value>
+	</context-param>
+	
+	<!--  게시판 Page 에 보여주는 게시물 수 -->
+	<context-param>
+		<param-name>pageSize</param-name>
+		<param-value>5</param-value>
+	</context-param>
+	
 	<!-- Encoding Filter: /* -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -31,8 +43,17 @@
 		
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/config</param-value>
+			<param-value>/config/springMVC/common-servlet.xml</param-value>
 		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<servlet-mapping>
+  		<servlet-name>action</servlet-name>
+  		<url-pattern>*.do</url-pattern>
+  	</servlet-mapping>
+  	
+  	
 
 </web-app>
