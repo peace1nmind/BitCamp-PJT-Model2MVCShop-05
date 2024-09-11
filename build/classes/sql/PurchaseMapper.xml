@@ -10,8 +10,8 @@
 	<!-- TypeHandler가 필요하다 -->
 	<resultMap type="purchase" id="purchaseSelectMap">
 		<result property="tranNo" 				column="tran_no" 			jdbcType="INTEGER"/>
-		<result property="prodNo" 	column="prod_no" 			jdbcType="INTEGER"/>
-		<result property="buyerId" 		column="buyer_id" 			jdbcType="VARCHAR"/>	
+		<result property="purchaseProd.prodNo" 	column="prod_no" 			jdbcType="INTEGER"/>
+		<result property="buyer.userId" 		column="buyer_id" 			jdbcType="VARCHAR"/>	
 		<result property="paymentOption" 		column="payment_option" 	jdbcType="CHAR"/>
 		<result property="receiverName" 		column="receiver_name" 		jdbcType="VARCHAR"/>
 		<result property="receiverPhone" 		column="receiver_phone" 	jdbcType="VARCHAR"/>
